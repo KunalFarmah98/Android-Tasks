@@ -14,7 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Images"></activity>
+        <activity
+            android:name=".ViewImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_view_image"
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity android:name=".Images" />
 
         <provider
             android:name=".MyProvider"

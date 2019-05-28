@@ -3,6 +3,7 @@ package com.apps.kunalfarmah.myapplication;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.crypto.Cipher;
@@ -49,9 +52,15 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar pb;
     Button upl,vimg;
 
+    static String stringArray="";
+
+    static SharedPreferences msalt,miv,mencrypted;
+    static SharedPreferences.Editor meditor,meditor1,meditor2;
+
+
    static File[] files;
 
-    String path;
+    static String path;
 
     ArrayList<File> list;
 
@@ -69,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
 
         path = getApplicationContext().getFilesDir().toString();
 
+
+        msalt = getSharedPreferences("salt",MODE_PRIVATE);
+        meditor= msalt.edit();
+
+        miv = getSharedPreferences("iv",MODE_PRIVATE);
+        meditor1 = miv.edit();
+
+        mencrypted = getSharedPreferences("encrypted",MODE_PRIVATE);
+        meditor2 = mencrypted.edit();
 
         uploading = findViewById(R.id.uploading);
         upl = findViewById(R.id.upload);
@@ -113,6 +131,22 @@ public class MainActivity extends AppCompatActivity {
                 img.setImageBitmap(bm);
                 name.setText(name.getText().toString()+".png");
 
+                // reading bytes of the file for encryption
+                int size = (int) imageFile.length();
+                byte[] bytes = new byte[size];
+                try {
+                    BufferedInputStream buf = new BufferedInputStream(new FileInputStream(imageFile));
+                    buf.read(bytes, 0, bytes.length);
+                    buf.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // encrypting the file after saving
+                encryptBytes(bytes,"yyhs@98KF",imageFile.getName());
+
                 Toast.makeText(getApplicationContext(),"Successfuly Uploaded "+name.getText().toString() +".png "
                 , Toast.LENGTH_SHORT).show();
 
@@ -132,9 +166,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-//                int idx = path.indexOf("/files");
-//                path = path.substring(0,idx);
-//                path = path+"/app_images";
+
 
                 path= "/data/data/com.apps.kunalfarmah.myapplication/app_Images";
 
@@ -282,15 +314,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private HashMap<String, byte[]> encryptBytes(byte[] plainTextBytes, String passwordString)
+    private void encryptBytes(byte[] plainTextBytes, String passwordString, String filename)
     {
-        HashMap<String, byte[]> map = new HashMap<String, byte[]>();
-
         try
         {
             //Random salt for next step
             SecureRandom random = new SecureRandom();
-            byte salt[] = new byte[256];
+            byte[] salt = new byte[256];
             random.nextBytes(salt);
 
             //PBKDF2 - derive the key from the password, don't use passwords directly
@@ -311,50 +341,20 @@ public class MainActivity extends AppCompatActivity {
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
             byte[] encrypted = cipher.doFinal(plainTextBytes);
 
-            map.put("salt", salt);
-            map.put("iv", iv);
-            map.put("encrypted", encrypted);
+            //puting encoding information in sharedpreferences keyed by filename
+
+            meditor.putString(filename, Arrays.toString(salt)).commit();
+
+            meditor1.putString(filename, Arrays.toString(iv)).commit();
+
+            meditor2.putString(filename, Arrays.toString(encrypted)).commit();
+
         }
         catch(Exception e)
         {
             Log.e("MYAPP", "encryption exception", e);
         }
-
-        return map;
     }
-
-
-    private byte[] decryptData(HashMap<String, byte[]> map, String passwordString)
-    {
-        byte[] decrypted = null;
-        try
-        {
-            byte salt[] = map.get("salt");
-            byte iv[] = map.get("iv");
-            byte encrypted[] = map.get("encrypted");
-
-            //regenerate key from password
-            char[] passwordChar = passwordString.toCharArray();
-            PBEKeySpec pbKeySpec = new PBEKeySpec(passwordChar, salt, 1324, 256);
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            byte[] keyBytes = secretKeyFactory.generateSecret(pbKeySpec).getEncoded();
-            SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
-
-            //Decrypt
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
-            IvParameterSpec ivSpec = new IvParameterSpec(iv);
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-            decrypted = cipher.doFinal(encrypted);
-        }
-        catch(Exception e)
-        {
-            Log.e("MYAPP", "decryption exception", e);
-        }
-
-        return decrypted;
-    }
-
-
 
 }
 
