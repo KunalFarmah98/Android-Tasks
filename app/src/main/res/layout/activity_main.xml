@@ -33,30 +33,54 @@
         android:id="@+id/img"
         android:layout_below="@+id/main"
         android:layout_centerHorizontal="true"
-        android:layout_margin="50dp"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:scaleType="center"
-        android:background="@drawable/icon1"/>
+        android:layout_marginTop="50dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        android:background="@drawable/upload"/>
 
     <Button
         android:id="@+id/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_below="@id/img"
-        android:layout_margin="20dp"
+        android:layout_below="@id/name"
+        android:layout_marginTop="20dp"
         android:background="@color/colorAccent"
         android:textColor="#ffffff"
         android:text="Upload Image"
         android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/vie_img"
+        android:layout_below="@id/upload"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Uploaded Images"/>
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Name your Image"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_below="@id/img"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        />
 
     <TextView
         android:id="@+id/uploading"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp"
+        android:textSize="10sp"
         android:textColor="#000000"
         android:visibility="gone"
         android:layout_width="wrap_content"
