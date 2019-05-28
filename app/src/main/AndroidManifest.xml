@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.apps.kunalfarmah.myapplication">
-    
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,8 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-       
-        <provider android:name=".MyProvider"
+        <activity android:name=".Images"></activity>
+
+        <provider
+            android:name=".MyProvider"
             android:authorities="your.package.name"
             android:exported="true" />
 
@@ -25,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

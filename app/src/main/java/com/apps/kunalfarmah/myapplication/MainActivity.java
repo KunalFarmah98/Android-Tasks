@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar pb;
     Button upl,vimg;
 
+   static File[] files;
+
     String path;
 
     ArrayList<File> list;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         uploading.setVisibility(GONE);
         name.setVisibility(GONE);
 
+        files = new File[]{};
         ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
 
         //making a new directory named Images in the app folder
@@ -129,16 +132,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                int i = path.indexOf("/files");
-                path = path.substring(0,i);
-                path = path+"/app_images/";
+//                int idx = path.indexOf("/files");
+//                path = path.substring(0,idx);
+//                path = path+"/app_images";
 
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    Uri uri = Uri.parse("content://com.apps.kunalfarmah.myapplication/" + path );
-                    intent.setDataAndType(uri,"resource/folder");
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(intent);
+                path= "/data/data/com.apps.kunalfarmah.myapplication/app_Images";
+
+//                    Intent intent = new Intent();
+//                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                    Uri uri = Uri.parse("content://com.apps.kunalfarmah.myapplication/" + path );
+//                    intent.setDataAndType(uri,"resource/folder");
+//                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                    startActivity(intent);
+
+                startActivity(new Intent(getApplicationContext(),Images.class));
+
+                Log.d("Files", "Path: " + path);
+                File directory = new File(path);
+                files = directory.listFiles();
+                Log.d("Files", "Size: "+ files.length);
+                for (int i = 0; i < files.length; i++)
+                {
+                    Log.d("Files", "FileName:" + files[i].getName());
+                }
 
             }
         });
