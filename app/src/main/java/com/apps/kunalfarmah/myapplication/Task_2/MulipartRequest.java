@@ -35,23 +35,25 @@ class MultipartRequest extends Request<NetworkResponse> {
     /**
      * Default constructor with predefined header and post method.
      *
+     * @param method        method accept POST and GET only
      * @param url           request destination
-     * @param context       passing context
+     * @param header        request header
      * @param listener      on success achieved 200 code from request
      * @param errorListener on error http or library timeout
      */
 
-    public MultipartRequest(String url, final Context context,
+    public MultipartRequest(int method, String url,  Map<String,String> header,
                             Response.Listener<NetworkResponse> listener,
                             Response.ErrorListener errorListener) {
-        super(Method.POST, url, errorListener);
+        super(method, url, errorListener);
         this.mListener = listener;
         this.mErrorListener = errorListener;
-        Map<String,String> header  = new HashMap<String, String>(){
-            {
-                put("Header" ,context.getSharedPreferences("auth_token",0).getString("token",null));
-            }
-        };
+//        Map<String,String> header  = new HashMap<String, String>(){
+//            {
+//                put("auth-token" ,context.getSharedPreferences("auth_token",0).getString("token",null));
+//                 //put("auth-token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRlIjoiV2VkIE1heSAyOSAyMDE5IiwiaWF0IjoxNTU5MTU4NzMzLCJleHAiOjE1NTkxNjIzMzN9.MBVmIbHmN4XQqB00rxcEc914UjFKMfQFlxMGQBOxIxg");
+//            }
+//        };
         this.mHeaders = header;
     }
 
@@ -76,7 +78,7 @@ class MultipartRequest extends Request<NetworkResponse> {
         return (mHeaders != null) ? mHeaders : super.getHeaders();
     }
 
-    @Override
+    /*@Override
     public String getBodyContentType() {
         return "multipart/form-data;boundary=" + boundary;
     }
@@ -109,7 +111,7 @@ class MultipartRequest extends Request<NetworkResponse> {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     /**
      * Custom method handle data payload.

@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 // encrypting the file after saving
                 encryptBytes(bytes,"yyhs@98KF",imageFile.getName());
 
-                Toast.makeText(getApplicationContext(),"Successfuly Uploaded "+name.getText().toString() +".png "
+                Toast.makeText(getApplicationContext(),"Successfuly Uploaded "+((name.getText().toString()!=null)?name.getText().toString():"")
                 , Toast.LENGTH_SHORT).show();
 
                 //using compressor library if required

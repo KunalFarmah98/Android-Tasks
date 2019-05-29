@@ -63,7 +63,7 @@
         android:id="@+id/vie_img"
         android:layout_below="@id/upload"
         android:padding="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:background="@color/colorAccent"
         android:textColor="#ffffff"
