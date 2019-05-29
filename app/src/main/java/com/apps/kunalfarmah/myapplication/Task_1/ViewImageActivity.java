@@ -1,4 +1,4 @@
-package com.apps.kunalfarmah.myapplication;
+package com.apps.kunalfarmah.myapplication.Task_1;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.apps.kunalfarmah.myapplication.R;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

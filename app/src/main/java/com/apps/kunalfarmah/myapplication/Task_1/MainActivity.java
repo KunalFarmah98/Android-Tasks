@@ -1,4 +1,4 @@
-package com.apps.kunalfarmah.myapplication;
+package com.apps.kunalfarmah.myapplication.Task_1;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apps.kunalfarmah.myapplication.R;
+import com.apps.kunalfarmah.myapplication.Task_2.MultipartRequestActivity;
+
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -30,11 +31,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -50,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
     ImageView img;
     EditText name;
     ProgressBar pb;
-    Button upl,vimg;
+    Button upl,vimg,t2;
 
     static String stringArray="";
 
     static SharedPreferences msalt,miv,mencrypted;
     static SharedPreferences.Editor meditor,meditor1,meditor2;
+
 
 
    static File[] files;
@@ -88,12 +88,17 @@ public class MainActivity extends AppCompatActivity {
         mencrypted = getSharedPreferences("encrypted",MODE_PRIVATE);
         meditor2 = mencrypted.edit();
 
+
+
+
+
         uploading = findViewById(R.id.uploading);
         upl = findViewById(R.id.upload);
         img = findViewById(R.id.img);
         vimg = findViewById(R.id.vie_img);
         name =findViewById(R.id.name);
         pb = findViewById(R.id.progress);
+        t2   = findViewById(R.id.task2);
 
         pb.setVisibility(GONE);
         uploading.setVisibility(GONE);
@@ -112,7 +117,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent pic = new Intent(Intent.ACTION_PICK);
                 pic.setType("image/*");
                 startActivityForResult(pic,PHOTO_PIC);
+                img.setBackground(getDrawable(R.drawable.black));
                 name.setVisibility(View.VISIBLE);
+                name.setText("");
+                name.setEnabled(true);
             }
         });
 
@@ -130,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bm = compressAndSave(imageFile);
                 img.setImageBitmap(bm);
                 name.setText(name.getText().toString()+".png");
+                name.setEnabled(false);
 
                 // reading bytes of the file for encryption
                 int size = (int) imageFile.length();
@@ -188,6 +197,13 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Files", "FileName:" + files[i].getName());
                 }
 
+            }
+        });
+
+        t2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),MultipartRequestActivity.class));
             }
         });
     }

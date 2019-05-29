@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -15,18 +16,22 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ViewImageActivity"
+            android:name=".Task_2.MultipartRequestActivity"
+            android:label="@string/title_activity_multipart_request">
+            </activity>
+        <activity
+            android:name=".Task_1.ViewImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_view_image"
-            android:theme="@style/FullscreenTheme"></activity>
-        <activity android:name=".Images" />
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".Task_1.Images" />
 
         <provider
-            android:name=".MyProvider"
+            android:name=".Task_1.MyProvider"
             android:authorities="your.package.name"
             android:exported="true" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".Task_1.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

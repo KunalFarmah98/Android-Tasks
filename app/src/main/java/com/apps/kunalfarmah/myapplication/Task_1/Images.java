@@ -1,18 +1,12 @@
-package com.apps.kunalfarmah.myapplication;
+package com.apps.kunalfarmah.myapplication.Task_1;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.apps.kunalfarmah.myapplication.R;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
+import java.util.ArrayList;
 
 public class Images extends AppCompatActivity {
 
