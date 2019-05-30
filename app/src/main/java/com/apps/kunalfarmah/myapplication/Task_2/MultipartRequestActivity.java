@@ -58,8 +58,8 @@ public class MultipartRequestActivity extends AppCompatActivity {
 
     ImageView img;
     EditText name;
-    Button upl,vimg,t2;
-    String token ="";
+    Button upl, vimg, t2;
+    String token = "";
 
     Uri imageUri;
 
@@ -71,7 +71,7 @@ public class MultipartRequestActivity extends AppCompatActivity {
     final String URL_IMAGE = "";
     private int REQUEST_SUCCESS = 1;
 
-    HashMap<String,String>header;
+    HashMap<String, String> header;
 
 
     @Override
@@ -82,12 +82,12 @@ public class MultipartRequestActivity extends AppCompatActivity {
         upl = findViewById(R.id.upload);
         img = findViewById(R.id.img);
         vimg = findViewById(R.id.vie_img);
-        name =findViewById(R.id.name);
+        name = findViewById(R.id.name);
         t2 = findViewById(R.id.task2);
         t2.setVisibility(View.GONE);
         vimg.setVisibility(View.GONE);
 
-        mtoken =getSharedPreferences("auth-token",MODE_PRIVATE);
+        mtoken = getSharedPreferences("auth-token", MODE_PRIVATE);
         mTokenEditor = mtoken.edit();
 //        mTokenEditor.putString("token","SportsAppTask2");
 
@@ -96,7 +96,7 @@ public class MultipartRequestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent pic = new Intent(Intent.ACTION_PICK);
                 pic.setType("image/*");
-                startActivityForResult(pic,PHOTO_PIC);
+                startActivityForResult(pic, PHOTO_PIC);
                 img.setBackground(getDrawable(R.drawable.black));
                 name.setVisibility(View.VISIBLE);
                 name.setText("");
@@ -109,11 +109,11 @@ public class MultipartRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(imageUri==null){
-                    Toast.makeText(getApplicationContext(),"Please Select a File",Toast.LENGTH_SHORT).show();
+                if (imageUri == null) {
+                    Toast.makeText(getApplicationContext(), "Please Select a File", Toast.LENGTH_SHORT).show();
                 }
 
-                name.setText(name.getText().toString()+".png");
+                name.setText(name.getText().toString() + ".png");
                 name.setEnabled(false);
                 uploadData();
                 // if actual data would be recieved
@@ -122,10 +122,10 @@ public class MultipartRequestActivity extends AppCompatActivity {
         });
 
         // creating a timer to make sure token is fetched after 1 hour of the previous token
-        Timer timer = new Timer ();
-        TimerTask hourlyTask = new TimerTask () {
+        Timer timer = new Timer();
+        TimerTask hourlyTask = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                         AUTH_URL, null,
                         new Response.Listener<JSONObject>() {
@@ -149,10 +149,13 @@ public class MultipartRequestActivity extends AppCompatActivity {
 
                 header = new HashMap<String, String>();
                 String token_ = getSharedPreferences("auth-token", MODE_PRIVATE).getString("token", null);
-
-                // extracting the correct token
-                int i = token_.indexOf(':');
-                token_ = token_.substring(i + 2, token_.length() - 2);
+                try {
+                    // extracting the correct token
+                    int i = token_.indexOf(':');
+                    token_ = token_.substring(i + 2, token_.length() - 2);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 // putting the token as header
                 header.put("auth-token", token_);
@@ -166,7 +169,7 @@ public class MultipartRequestActivity extends AppCompatActivity {
         };
 
 // schedule the task to run starting now and then every hour...
-        timer.schedule (hourlyTask, 0l, 1000*60*60*60);   // every hour after the first call
+        timer.schedule(hourlyTask, 0l, 1000 * 60 * 60 * 60);   // every hour after the first call
     }
 
     @Override
@@ -177,7 +180,7 @@ public class MultipartRequestActivity extends AppCompatActivity {
             case PHOTO_PIC:
                 if (resultCode == RESULT_OK) {
 
-                     imageUri = data.getData();
+                    imageUri = data.getData();
                     img.setImageURI(imageUri);
                 }
                 break;
@@ -194,29 +197,27 @@ public class MultipartRequestActivity extends AppCompatActivity {
                 String resultResponse = new String(response.data);
                 try {
                     JSONObject result = new JSONObject(resultResponse);
-                    String data="";
+                    String data = "";
                     boolean valid = result.getBoolean("success");
-                    Log.d("success",String.valueOf(result.getBoolean("success")));
-                    if(valid) {
+                    Log.d("success", String.valueOf(result.getBoolean("success")));
+                    if (valid) {
                         data = result.getString("data");
                     }
                     String message = result.getString("message");
 
-                    if(valid){
+                    if (valid) {
                         Log.d("Accepted", data);
-                        Toast.makeText(getApplicationContext(),"Sucessfully Sent File "+((name.getText().toString()!=null)?name.getText().toString():"")
-                        ,Toast.LENGTH_SHORT).show();
-                    }
-                    else if(!valid) {
-                        Log.d("TokenError",message);
-                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Sucessfully Sent File " + ((name.getText().toString() != null) ? name.getText().toString() : "")
+                                , Toast.LENGTH_SHORT).show();
+                    } else if (!valid) {
+                        Log.d("TokenError", message);
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         throw new VolleyError();
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-                catch (VolleyError e){
+                } catch (VolleyError e) {
                     e.printStackTrace();
                 }
             }
@@ -230,8 +231,7 @@ public class MultipartRequestActivity extends AppCompatActivity {
                         errorMessage = "Request timeout";
                     } else if (error.getClass().equals(NoConnectionError.class)) {
                         errorMessage = "Failed to connect server";
-                    }
-                    else if (error.getClass().equals(VolleyError.class)){
+                    } else if (error.getClass().equals(VolleyError.class)) {
                         errorMessage = "Authentication Failed";
                     }
                 } else {
@@ -247,11 +247,11 @@ public class MultipartRequestActivity extends AppCompatActivity {
                         if (networkResponse.statusCode == 404) {
                             errorMessage = "Resource not found";
                         } else if (networkResponse.statusCode == 401) {
-                            errorMessage = message+" Please login again";
+                            errorMessage = message + " Please login again";
                         } else if (networkResponse.statusCode == 400) {
-                            errorMessage = message+ " Check your inputs";
+                            errorMessage = message + " Check your inputs";
                         } else if (networkResponse.statusCode == 500) {
-                            errorMessage = message+" Something is getting wrong";
+                            errorMessage = message + " Something is getting wrong";
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -260,17 +260,17 @@ public class MultipartRequestActivity extends AppCompatActivity {
                 Log.i("Error", errorMessage);
                 error.printStackTrace();
             }
-        }) {
-            @Override
+        }); //{
+         /*   @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("api_token", getApplicationContext().getSharedPreferences("auth_token",0).getString("token",null));
+                params.put("api_token", getApplicationContext().getSharedPreferences("auth_token", 0).getString("token", null));
                 params.put("name", "Kunal  Farmah");
                 params.put("location", "New Delhi");
                 params.put("about", "Test");
                 params.put("contact", "SportsApp");
                 return params;
-            }
+            }*/
 
 // not setting header every call
       /*      @Override
@@ -289,7 +289,7 @@ public class MultipartRequestActivity extends AppCompatActivity {
 
                 return header;
             }*/
-        };
+      //  };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
     }
 
@@ -346,7 +346,6 @@ public class MultipartRequestActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
-
 
 
 }
