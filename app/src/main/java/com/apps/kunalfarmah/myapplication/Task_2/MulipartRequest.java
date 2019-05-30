@@ -1,14 +1,10 @@
 package com.apps.kunalfarmah.myapplication.Task_2;
 
-import android.content.Context;
-
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.android.volley.AuthFailureError;
@@ -77,6 +73,11 @@ class MultipartRequest extends Request<NetworkResponse> {
     public Map<String, String> getHeaders() throws AuthFailureError {
         return (mHeaders != null) ? mHeaders : super.getHeaders();
     }
+
+
+    /*
+    * Other useful methods that can be used
+    */
 
     /*@Override
     public String getBodyContentType() {

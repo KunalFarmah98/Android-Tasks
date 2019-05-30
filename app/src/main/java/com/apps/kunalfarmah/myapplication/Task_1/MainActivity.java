@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar pb;
     Button upl,vimg,t2;
 
-    static String stringArray="";
+    byte[] bytes;
+
 
     static SharedPreferences msalt,miv,mencrypted;
     static SharedPreferences.Editor meditor,meditor1,meditor2;
@@ -62,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
     static String path;
 
-    ArrayList<File> list;
 
     Uri imageUri;
     File imageFile,file;
@@ -73,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        list = new ArrayList<>();
 
         path = getApplicationContext().getFilesDir().toString();
 
@@ -87,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
         mencrypted = getSharedPreferences("encrypted",MODE_PRIVATE);
         meditor2 = mencrypted.edit();
-
-
 
 
 
@@ -142,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // reading bytes of the file for encryption
                 int size = (int) imageFile.length();
-                byte[] bytes = new byte[size];
+                bytes = new byte[size];
                 try {
                     BufferedInputStream buf = new BufferedInputStream(new FileInputStream(imageFile));
                     buf.read(bytes, 0, bytes.length);
@@ -229,6 +225,36 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap compressAndSave(File f) {
         Bitmap b = null;
 
+
+       /* // reading bytes of the file for encryption
+        int size = (int) f.length();
+        bytes = new byte[size];
+        try {
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(f));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // encrypting the bytes
+
+        encryptBytes(bytes,"yyhs@98KF",name.getText().toString()+".png");
+
+//        // writing the bytes to the file
+//        try {
+//            FileOutputStream fos=new FileOutputStream(f.getPath());
+//            fos.write(bytes);
+//            fos.close();
+//        }
+//        catch (java.io.IOException e) {
+//            Toast.makeText(getBaseContext(),"Oops! Can't encrypt the File :(",Toast.LENGTH_SHORT).show();
+//            Log.e("PictureDemo", "Exception in photoCallback", e);
+//        }
+*/
+
         //Decode image size
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
@@ -268,10 +294,14 @@ public class MainActivity extends AppCompatActivity {
         // Log.d(TAG, "Width :" + b.getWidth() + " Height :" + b.getHeight());
 
         imageFile = new File(file, name.getText().toString()+".png");
+
+
+        // compressing
+
         try {
             FileOutputStream out = new FileOutputStream(imageFile);
             b.compress(Bitmap.CompressFormat.PNG, 100, out);
-            list.add(imageFile);
+            //list.add(imageFile);
             out.flush();
             out.close();
 
@@ -356,6 +386,9 @@ public class MainActivity extends AppCompatActivity {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
             byte[] encrypted = cipher.doFinal(plainTextBytes);
+
+            // encryption done
+            bytes = encrypted;
 
             //puting encoding information in sharedpreferences keyed by filename
 

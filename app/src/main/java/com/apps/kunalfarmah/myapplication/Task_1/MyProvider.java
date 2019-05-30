@@ -9,6 +9,8 @@ import android.os.ParcelFileDescriptor;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+// as per android guidelines content provider is required to open an application file externally
+
 public class MyProvider extends ContentProvider {
 
     @Override
